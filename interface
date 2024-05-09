@@ -1,0 +1,62 @@
+import os
+import tkinter as tk
+import subprocess
+from tkinter.scrolledtext import ScrolledText
+
+def run_script(script_path=None):
+    if script_path:
+        subprocess.Popen(["sudo", "bash", script_path])
+    else:
+        global entry
+        file_path = entry.get()
+        if not file_path:
+            output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
+            return
+        script_path = os.path.join("scripts", "virustotal.sh")
+        subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
+
+def run_meta_script():
+    global entry
+    file_path = entry.get()
+    if not file_path:
+        output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
+        return
+    script_path = os.path.join("scripts", "meta.sh")
+    subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
+
+def execute_command(event=None):
+    command = entry.get()
+    output.insert(tk.END, "$ " + command + "\n")
+    result = subprocess.Popen(["sudo", "bash", "-c", command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for line in result.stdout:
+        output.insert(tk.END, line.decode())
+    output.insert(tk.END, "\n")
+
+root = tk.Tk()
+root.title("Script Runner")
+
+# Создаем кнопки для каждого скрипта
+button_conf = tk.Button(root, text="Run conf script", command=lambda: run_script("scripts/conf.sh"), width=20)
+button_cpu = tk.Button(root, text="Run cpu script", command=lambda: run_script("scripts/cpu.sh"), width=20)
+button_meta = tk.Button(root, text="Run meta script", command=run_meta_script, width=20)
+button_log = tk.Button(root, text="Run log script", command=lambda: run_script("scripts/log.sh"), width=20)
+button_network = tk.Button(root, text="Run network script", command=lambda: run_script("scripts/network.sh"), width=20)
+button_virustotal = tk.Button(root, text="Run virustotal script", command=run_script, width=20)
+
+# Размещаем кнопки на интерфейсе
+button_conf.pack(pady=5)
+button_cpu.pack(pady=5)
+button_meta.pack(pady=5)
+button_log.pack(pady=5)
+button_network.pack(pady=5)
+button_virustotal.pack(pady=5)
+
+# Создаем виджеты для ввода и вывода команд
+entry = tk.Entry(root, width=50)
+entry.bind("<Return>", execute_command)
+entry.pack(pady=5)
+
+output = ScrolledText(root, height=10, width=80)
+output.pack(pady=5)
+
+root.mainloop()
