@@ -4,6 +4,7 @@ apt-get install curl -y
 apt-get install net-tools -y
 apt-get install exiftool -y
 apt-get install tcpdump -y
+apt-get install nmap -y
 
 sudo chmod +x conf.sh
 sudo chmod +x cpu.sh
