@@ -12,7 +12,7 @@ def run_script(script_path=None):
         if not file_path:
             output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
             return
-        script_path = os.path.join("scripts", "virustotal.sh")
+        script_path = os.path.join("dacollector", "virustotal.sh")
         subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
 
 def run_meta_script():
@@ -21,7 +21,7 @@ def run_meta_script():
     if not file_path:
         output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
         return
-    script_path = os.path.join("scripts", "meta.sh")
+    script_path = os.path.join("dacollector", "meta.sh")
     subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
 
 def execute_command(event=None):
@@ -36,11 +36,11 @@ root = tk.Tk()
 root.title("Script Runner")
 
 # Создаем кнопки для каждого скрипта
-button_conf = tk.Button(root, text="Run conf script", command=lambda: run_script("scripts/conf.sh"), width=20)
-button_cpu = tk.Button(root, text="Run cpu script", command=lambda: run_script("scripts/cpu.sh"), width=20)
+button_conf = tk.Button(root, text="Run conf script", command=lambda: run_script("conf.sh"), width=20)
+button_cpu = tk.Button(root, text="Run cpu script", command=lambda: run_script("cpu.sh"), width=20)
 button_meta = tk.Button(root, text="Run meta script", command=run_meta_script, width=20)
-button_log = tk.Button(root, text="Run log script", command=lambda: run_script("scripts/log.sh"), width=20)
-button_network = tk.Button(root, text="Run network script", command=lambda: run_script("scripts/network.sh"), width=20)
+button_log = tk.Button(root, text="Run log script", command=lambda: run_script("log.sh"), width=20)
+button_network = tk.Button(root, text="Run network script", command=lambda: run_script("network.sh"), width=20)
 button_virustotal = tk.Button(root, text="Run virustotal script", command=run_script, width=20)
 
 # Размещаем кнопки на интерфейсе
