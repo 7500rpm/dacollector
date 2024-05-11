@@ -12,7 +12,7 @@ def run_script(script_path=None):
         if not file_path:
             output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
             return
-        script_path = os.path.join("dacollector", "virustotal.sh")
+        script_path = os.path.join("virustotal.sh")
         subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
 
 def run_meta_script():
@@ -21,7 +21,7 @@ def run_meta_script():
     if not file_path:
         output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
         return
-    script_path = os.path.join("dacollector", "meta.sh")
+    script_path = os.path.join("meta.sh")
     subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
 
 def execute_command(event=None):
