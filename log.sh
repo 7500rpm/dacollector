@@ -1,17 +1,26 @@
 #!/bin/bash
+rm -rf /home/ilya/Desktop/logs/
+mkdir /home/ilya/Desktop/logs/
 
 # Путь к каталогу с лог-файлами
 log_directory="/var/log"
+users=$(ls /home)
 
 # Путь к файлу для записи найденных строк
-output_file1="/home/ilya/Desktop/auth_log.txt"
-output_file2="/home/ilya/Desktop/error_logs.txt"
-
+output_file1="/home/ilya/Desktop/logs/auth_log.txt"
+output_file2="/home/ilya/Desktop/logs/error_logs.txt"
+output_file3="/home/ilya/Desktop/logs/users_lastlog.txt"
+output_file4="/home/ilya/Desktop/logs/apt_history.txt"
+output_file5="/home/ilya/Desktop/logs/users_bash_history.txt"
+output_file6="/home/ilya/Desktop/logs/root_bash_history.txt"
 
 # Очистим файл перед началом сканирования
 > "$output_file1"
 > "$output_file2"
-
+> "$output_file3"
+> "$output_file4"
+> "$output_file5"
+> "$output_file6"
 # Проходим по файлам auth.log и syslog
 for logfile in "$log_directory/auth.log"; do
     # Проверяем, существует ли файл
@@ -30,4 +39,19 @@ for logfile in "$log_directory/syslog"; do
     fi
 done
 
-echo "Logs with keywords have been saved to $output_file1 and $output_file2"
+last $(ls /home) >> "$output_file3"
+cat /var/log/apt/history.log >> "$output_file4"
+
+
+# Проходим по каждому пользователю и выводим его историю
+for user in $users; do
+    echo "History for user $user was collected"
+    history_file="/home/$user/.bash_history"
+    cat "$history_file" >> "$output_file5"
+    cat /root/.bash_history >> "$output_file6"
+    echo "History for root was collected"
+
+done
+
+
+echo "Logs was collected"
