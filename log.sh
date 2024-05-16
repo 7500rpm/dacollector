@@ -26,7 +26,7 @@ for logfile in "$log_directory/auth.log"; do
     # Проверяем, существует ли файл
     if [[ -f "$logfile" ]]; then
         # Ищем строки с ключевыми словами и записываем их в файл
-        grep -Ei "error|failed|denied" "$logfile" >> "$output_file1"
+        grep -Ei "sshd|session opened for|accepted password|new session|not in sudoers" "$logfile" >> "$output_file1"
     fi
 done
 
