@@ -6,6 +6,7 @@ CLIENT_SECRET="befc3188-eb9b-495e-bf24-97eede87f7cb"
 RUID=$(uuidgen)
 TOKEN_URL="https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
 CHAT_API_URL="https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
+AUTH_DATA="ZDhmM2E1YTctNzhmMy00ZGYwLTg3NTYtMTI4YmViZTU3ZTY5OmJlZmMzMTg4LWViOWItNDk1ZS1iZjI0LTk3ZWVkZTg3ZjdjYg=="
 
 # Запрос пути к файлу у пользователя
 read -p "Введите путь до файла для отправки на анализ: " file_path
@@ -15,9 +16,6 @@ if [ ! -f "$file_path" ]; then
     echo "Ошибка: Файл не найден."
     exit 1
 fi
-
-# Формирование авторизационных данных
-AUTH_DATA="ZDhmM2E1YTctNzhmMy00ZGYwLTg3NTYtMTI4YmViZTU3ZTY5OmJlZmMzMTg4LWViOWItNDk1ZS1iZjI0LTk3ZWVkZTg3ZjdjYg=="
 
 # Получение токена доступа
 response=$(curl -s -L -X POST "$TOKEN_URL" \
