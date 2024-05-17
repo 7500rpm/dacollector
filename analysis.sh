@@ -6,7 +6,6 @@ CLIENT_SECRET="befc3188-eb9b-495e-bf24-97eede87f7cb"
 RUID=$(uuidgen)
 TOKEN_URL="https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
 CHAT_API_URL="https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
-AUTH_DATA="ZDhmM2E1YTctNzhmMy00ZGYwLTg3NTYtMTI4YmViZTU3ZTY5OmJlZmMzMTg4LWViOWItNDk1ZS1iZjI0LTk3ZWVkZTg3ZjdjYg=="
 
 # Запрос пути к файлу у пользователя
 read -p "Введите путь до файла для отправки на анализ: " file_path
@@ -16,6 +15,9 @@ if [ ! -f "$file_path" ]; then
     echo "Ошибка: Файл не найден."
     exit 1
 fi
+
+# Формирование авторизационных данных
+AUTH_DATA="ZDhmM2E1YTctNzhmMy00ZGYwLTg3NTYtMTI4YmViZTU3ZTY5OmJlZmMzMTg4LWViOWItNDk1ZS1iZjI0LTk3ZWVkZTg3ZjdjYg=="
 
 # Получение токена доступа
 response=$(curl -s -L -X POST "$TOKEN_URL" \
@@ -33,9 +35,11 @@ if [ "$access_token" == "null" ]; then
   exit 1
 fi
 
+echo "Проанализируй данные записи на наличие подозрительной активности" >> "$file_path"
 # Формирование сообщения для анализа
-file=$(cat "$file_path")
-message="Проведи анализ данных записей на наличие подозрительной активности\n $file"
+data=$(cat "$file_path")
+message="$data"
+
 
 # Создание JSON запроса с помощью jq
 json_request=$(jq -n \
@@ -65,7 +69,7 @@ json_request=$(jq -n \
   }')
 
 # Запрос на генерацию текста
-response=$(curl -s -L -X POST "$CHAT_API_URL" \
+response=$(curl -L -X POST "$CHAT_API_URL" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
   -H "Authorization: Bearer $access_token" \
@@ -74,3 +78,5 @@ response=$(curl -s -L -X POST "$CHAT_API_URL" \
 # Вывод результата
 echo "Результаты анализа: "
 echo "$response"
+
+sed -i '/Проанализируй данные записи на наличие подозрительной активности/d' $file_path
