@@ -9,10 +9,30 @@ def run_script(script_path=None):
     else:
         global entry
         file_path = entry.get()
+        subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
+
+def run_virustotal_script(script_path=None):
+    if script_path:
+        subprocess.Popen(["sudo", "bash", script_path])
+    else:
+        global entry
+        file_path = entry.get()
         if not file_path:
             output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
             return
         script_path = os.path.join("virustotal.sh")
+        subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
+        
+def run_analysis_script(script_path=None):
+    if script_path:
+        subprocess.Popen(["sudo", "bash", script_path])
+    else:
+        global entry
+        file_path = entry.get()
+        if not file_path:
+            output.insert(tk.END, "Ошибка: Вы не ввели путь до файла.\n")
+            return
+        script_path = os.path.join("analysis.sh")
         subprocess.Popen(["sudo", "bash", script_path], stdin=subprocess.PIPE).communicate(file_path.encode())
 
 def run_meta_script():
@@ -41,7 +61,8 @@ button_cpu = tk.Button(root, text="Run cpu script", command=lambda: run_script("
 button_meta = tk.Button(root, text="Run meta script", command=run_meta_script, width=20)
 button_log = tk.Button(root, text="Run log script", command=lambda: run_script("log.sh"), width=20)
 button_network = tk.Button(root, text="Run network script", command=lambda: run_script("network.sh"), width=20)
-button_virustotal = tk.Button(root, text="Run virustotal script", command=run_script, width=20)
+button_virustotal = tk.Button(root, text="Run virustotal script", command=run_virustotal_script, width=20)
+button_analysis = tk.Button(root, text="Run analysis script", command=run_analysis_script, width=20)
 
 # Размещаем кнопки на интерфейсе
 button_conf.pack(pady=5)
@@ -50,6 +71,7 @@ button_meta.pack(pady=5)
 button_log.pack(pady=5)
 button_network.pack(pady=5)
 button_virustotal.pack(pady=5)
+button_analysis.pack(pady=5)
 
 # Создаем виджеты для ввода и вывода команд
 entry = tk.Entry(root, width=50)
